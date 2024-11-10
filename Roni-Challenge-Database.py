@@ -1,7 +1,12 @@
 import csv
 import numpy as np
+import pandas as pd
 
 file_names = ['april_2024.csv', 'may_2024.csv', 'june_2024.csv', 'july_2024.csv', 'august_2024.csv', 'september_2024.csv', 'october_2024.csv']
+
+for name in file_names:
+    df = pd.read_csv(name)
+    df.dropna(inplace = True)
 
 month_orders = []
 hours = []
