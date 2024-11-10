@@ -93,6 +93,28 @@ else:
 st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
 
+# Get the most popular hour and display it
+most_popular_hour = pd.Series(hours).value_counts().idxmax()
+st.write(f"Most Popular Hour: {most_popular_hour}")
+
+# Data Insights section (moved here after most popular hour)
+st.subheader("Data Insights")
+
+# Function to get the most popular item for each ingredient category
+def get_most_popular_items(data):
+    most_popular = {}
+    for category, items in data.items():
+        most_popular[category] = max(items, key=items.get)
+    return most_popular
+
+# Get the most popular items for each ingredient category
+most_popular_items = get_most_popular_items(ingredient_data)
+
+# Display the most popular items in each category
+st.write("Most popular ingredients for each category:")
+for category, item in most_popular_items.items():
+    st.write(f"- {category.capitalize()}: {item} with {ingredient_data[category][item]} orders")
+
 # Monthly Orders by Hour
 st.subheader("Orders by Hour")
 hour_counts = pd.Series(hours).value_counts().sort_index()
@@ -113,13 +135,6 @@ def plot_ingredient_popularity(data, category):
     # Re-sort the DataFrame to maintain the correct order
     df = df.set_index(category).reindex(all_labels).reset_index()
     st.bar_chart(df.set_index(category))
-
-# Function to get the most popular item for each ingredient category
-def get_most_popular_items(data):
-    most_popular = {}
-    for category, items in data.items():
-        most_popular[category] = max(items, key=items.get)
-    return most_popular
 
 # Display graphs based on user selection
 if selected_cheese:
@@ -143,14 +158,3 @@ if selected_all:
     plot_ingredient_popularity(ingredient_data, 'toppings')
     st.subheader("Sauce Popularity")
     plot_ingredient_popularity(ingredient_data, 'sauces')
-
-# Data Insights section
-st.subheader("Data Insights")
-
-# Get the most popular items for each ingredient category
-most_popular_items = get_most_popular_items(ingredient_data)
-
-# Display the most popular items in each category
-st.write("Most popular ingredients for each category:")
-for category, item in most_popular_items.items():
-    st.write(f"- {category.capitalize()}: {item} with {ingredient_data[category][item]} orders")
