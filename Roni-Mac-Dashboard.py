@@ -33,11 +33,6 @@ selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.ke
 # Convert selected month name back to file name
 selected_month = month_to_file[selected_month_name]
 
-selected_cheese = st.sidebar.multiselect("Choose Your Cheese", list(ingredient_counts['cheese'].keys()))
-selected_meat = st.sidebar.multiselect("Choose Your Meat", list(ingredient_counts['meat'].keys()))
-selected_topping = st.sidebar.multiselect("Pick Your Toppings", list(ingredient_counts['toppings'].keys()))
-selected_sauce = st.sidebar.multiselect("Choose Your Sauce", list(ingredient_counts['sauces'].keys()))
-
 # Function to load data from CSV files and count ingredients
 def load_data(file_name):
     orders = []
@@ -80,14 +75,11 @@ def plot_ingredient_popularity(data, category):
     df = pd.DataFrame({category: labels, 'Count': counts})
     st.bar_chart(df.set_index(category))
 
-# Display charts for selected ingredients
-if selected_cheese:
+if st.button("Show All Ingredient Popularity"):
+    # Display charts for all ingredients
     plot_ingredient_popularity(ingredient_data, 'cheese')
-if selected_meat:
     plot_ingredient_popularity(ingredient_data, 'meat')
-if selected_topping:
     plot_ingredient_popularity(ingredient_data, 'toppings')
-if selected_sauce:
     plot_ingredient_popularity(ingredient_data, 'sauces')
 
 # Insights section
