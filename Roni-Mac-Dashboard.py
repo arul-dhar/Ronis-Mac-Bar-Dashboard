@@ -2,7 +2,6 @@ import csv
 import numpy as np
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # File names for each month
 file_names = [
@@ -69,12 +68,9 @@ st.bar_chart(hour_counts)
 # Ingredient Popularity Charts
 def plot_ingredient_popularity(data, category):
     labels, counts = zip(*data[category].items())
-    fig, ax = plt.subplots()
-    ax.bar(labels, counts, color='skyblue')
-    ax.set_title(f"{category.capitalize()} Popularity")
-    ax.set_xlabel(category.capitalize())
-    ax.set_ylabel("Count")
-    st.pyplot(fig)
+    df = pd.DataFrame({category: labels, 'Count': counts})
+    st.bar_chart(df.set_index(category))
+
 
 # Display charts for selected ingredients
 if selected_cheese:
