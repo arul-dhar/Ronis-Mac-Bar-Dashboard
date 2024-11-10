@@ -22,14 +22,14 @@ month_to_file = {
 
 # Initialize dictionaries for each ingredient category
 ingredient_counts = {
-    'cheese': {'alfredo': 0, 'cheddar': 0, 'pepperjack': 0},
-    'meat': {'nomeat': 0, 'chicken': 0, 'pork': 0, 'brisket': 0, 'bacon': 0, 'ham': 0},
+    'cheese': {'Alfredo': 0, 'Cheddar': 0, 'Pepper Jack': 0},
+    'meat': {'No Meat': 0, 'Chicken': 0, 'Pulled Pork': 0, 'Brisket': 0, 'Bacon': 0, 'Ham': 0},
     'toppings': {
-        'notoppings': 0, 'broccoli': 0, 'corn': 0, 'onion': 0, 
-        'jalapeno': 0, 'tomato': 0, 'pepper': 0, 'mushroom': 0, 
-        'pineapple': 0, 'parmesan': 0, 'breadcrumbs': 0
+        'No Toppings': 0, 'Broccoli': 0, 'Corn': 0, 'Onions': 0, 
+        'Jalapenos': 0, 'Tomatoes': 0, 'Bell Peppers': 0, 'Mushrooms': 0, 
+        'Pineapple': 0, 'Parmesan': 0, 'Breadcrumbs': 0
     },
-    'sauces': {'nodrizzle': 0, 'bbq': 0, 'garlicparm': 0, 'buffalo': 0, 'pesto': 0, 'ranch': 0, 'hothoney': 0}
+    'sauces': {'No Drizzle': 0, 'BBQ': 0, 'Garlic Parmesan': 0, 'Buffalo': 0, 'Pesto': 0, 'Ranch': 0, 'Hot Honey': 0}
 }
 
 # Sidebar for selecting month and ingredient filters
