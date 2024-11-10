@@ -72,7 +72,7 @@ def load_data(file_name):
 ingredient_data, hours = load_data(selected_month)
 
 # Dashboard Title
-st.title("Pizza Orders Dashboard")
+st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Monthly Overview for {selected_month_name} 2024")
 
 # Monthly Orders by Hour
