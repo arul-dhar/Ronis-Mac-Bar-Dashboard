@@ -31,11 +31,16 @@ st.sidebar.header("Filter Options")
 selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.keys()))
 
 # Sidebar options for ingredient categories
-selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
-selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
-selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
-selected_sauce = st.sidebar.multiselect("Select Sauce", list(ingredient_counts['sauces'].keys()))
+#selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
+#selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
+#selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
+#selected_sauce = st.sidebar.multiselect("Select Sauce", list(ingredient_counts['sauces'].keys()))
 
+selected_cheese = st.sidebar.button("Select Cheese")
+selected_meat = st.sidebar.button("Select Meat")
+selected_topping = st.sidebar.button("Select Topping")
+selected_sauce = st.sidebar.button("Select Sauce")
+    
 # Convert selected month name back to file name
 selected_month = month_to_file[selected_month_name]
 
@@ -91,28 +96,24 @@ def plot_ingredient_popularity(data, category):
     st.bar_chart(df.set_index(category))
 
 # Display graph for selected cheese
-if st.button("Show Cheese Popularity"):
-    if selected_cheese:
-        st.subheader("Cheese Popularity")
-        plot_ingredient_popularity(ingredient_data, 'cheese')
+if selected_cheese:
+    st.subheader("Cheese Popularity")
+    plot_ingredient_popularity(ingredient_data, 'cheese')
 
 # Display graph for selected meat
-if st.button("Show Meat Popularity"):
-    if selected_meat:
-        st.subheader("Meat Popularity")
-        plot_ingredient_popularity(ingredient_data, 'meat')
+if selected_meat:
+    st.subheader("Meat Popularity")
+    plot_ingredient_popularity(ingredient_data, 'meat')
 
 # Display graph for selected toppings
-if st.button("Show Topping Popularity"):
-    if selected_topping:
-        st.subheader("Topping Popularity")
-        plot_ingredient_popularity(ingredient_data, 'toppings')
+if selected_topping:
+    st.subheader("Topping Popularity")
+    plot_ingredient_popularity(ingredient_data, 'toppings')
 
 # Display graph for selected sauces
-if st.button("Show Sauce Popularity"):
-    if selected_sauce:
-        st.subheader("Sauce Popularity")
-        plot_ingredient_popularity(ingredient_data, 'sauces')
+if selected_sauce:
+    st.subheader("Sauce Popularity")
+    plot_ingredient_popularity(ingredient_data, 'sauces')
 
 # Insights section
 st.subheader("Data Insights")
