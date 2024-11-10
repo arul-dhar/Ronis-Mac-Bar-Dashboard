@@ -56,7 +56,7 @@ def load_data(file_name):
 
         for row in reader:
             if row[5] == "0-0":
-                break
+                continue
             order_time = row[1].split()[1].split(":")[0]
             hours.append(order_time)
 
