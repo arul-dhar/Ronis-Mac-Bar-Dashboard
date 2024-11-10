@@ -90,7 +90,7 @@ else:
     ingredient_data, hours = load_data(month_to_file[selected_month_name])
 
 # Dashboard Title
-st.title("Pizza Orders Dashboard")
+st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
 
 # Monthly Orders by Hour
