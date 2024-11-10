@@ -3,12 +3,6 @@ import numpy as np
 import streamlit as st
 import pandas as pd
 
-# File names for each month
-file_names = [
-    'april_2024.csv', 'may_2024.csv', 'june_2024.csv', 
-    'july_2024.csv', 'august_2024.csv', 'september_2024.csv', 'october_2024.csv'
-]
-
 # Mapping from month names to file names
 month_to_file = {
     'April': 'april_2024.csv',
