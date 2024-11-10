@@ -43,7 +43,7 @@ selected_all = st.sidebar.button("Show All Ingredient Popularities")
 # Function to load data from a single CSV file and count ingredients
 def load_data(file_name):
     ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
-    order_times = []  # Store the full order time (not just the hour)
+    hours = []
 
     with open(file_name, 'r', encoding='utf-8', errors='ignore') as file:
         reader = csv.reader(file)
@@ -51,10 +51,9 @@ def load_data(file_name):
 
         for row in reader:
             try:
-                # Extract the full time (hour:minute)
-                order_time = row[1].split()[1]  # Assuming the time is in the second column (index 1)
-                order_times.append(order_time)  # Add full time to the list
-                
+                order_time = row[1].split()[1].split(":")[0]
+                hours.append(order_time)
+    
                 # Count ingredients
                 ingredient = row[2]
                 for category in ingredient_data:
@@ -64,41 +63,40 @@ def load_data(file_name):
             except Exception:
                 continue
 
-    return ingredient_data, order_times
+    return ingredient_data, hours
 
-# Function to get the most popular hour
-def get_most_popular_hour(order_times):
-    most_popular_hour = pd.Series(order_times).value_counts().idxmax()
-    return most_popular_hour
+# Function to load data for all months and aggregate
+def load_all_months_data():
+    combined_ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
+    combined_hours = []
+
+    for file_name in month_to_file.values():
+        monthly_data, monthly_hours = load_data(file_name)
+        
+        # Aggregate ingredient counts
+        for category in combined_ingredient_data:
+            for ingredient in combined_ingredient_data[category]:
+                combined_ingredient_data[category][ingredient] += monthly_data[category][ingredient]
+
+        # Combine hours data
+        combined_hours.extend(monthly_hours)
+
+    return combined_ingredient_data, combined_hours
 
 # Load data based on the selected month
 if selected_month_name == 'All Months':
-    ingredient_data, order_times = load_all_months_data()
+    ingredient_data, hours = load_all_months_data()
 else:
-    ingredient_data, order_times = load_data(month_to_file[selected_month_name])
+    ingredient_data, hours = load_data(month_to_file[selected_month_name])
 
 # Dashboard Title
 st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
 
-# Get and display the most popular hour before the hour graph
-most_popular_hour = get_most_popular_hour(order_times)
-st.write(f"Most Popular Hour: {most_popular_hour}")
-
-# Monthly Orders by Time of Day (now with actual time)
-st.subheader("Orders by Time of Day")
-# Create a Pandas Series with order times
-order_time_series = pd.Series(order_times)
-
-# Count the frequency of each order time and sort them
-order_time_counts = order_time_series.value_counts().sort_index()
-
-# Plot the bar chart with the actual time of the day as x-axis labels
-st.bar_chart(order_time_counts)
-
-# Data Insights section (moved here after hour graph)
-st.subheader("Data Insights")
-st.write("Most popular ingredients and combinations can be displayed here.")
+# Monthly Orders by Hour
+st.subheader("Orders by Hour")
+hour_counts = pd.Series(hours).value_counts().sort_index()
+st.bar_chart(hour_counts)
 
 # Function to plot ingredient popularity
 def plot_ingredient_popularity(data, category):
@@ -115,6 +113,13 @@ def plot_ingredient_popularity(data, category):
     # Re-sort the DataFrame to maintain the correct order
     df = df.set_index(category).reindex(all_labels).reset_index()
     st.bar_chart(df.set_index(category))
+
+# Function to get the most popular item for each ingredient category
+def get_most_popular_items(data):
+    most_popular = {}
+    for category, items in data.items():
+        most_popular[category] = max(items, key=items.get)
+    return most_popular
 
 # Display graphs based on user selection
 if selected_cheese:
@@ -139,3 +144,13 @@ if selected_all:
     st.subheader("Sauce Popularity")
     plot_ingredient_popularity(ingredient_data, 'sauces')
 
+# Data Insights section
+st.subheader("Data Insights")
+
+# Get the most popular items for each ingredient category
+most_popular_items = get_most_popular_items(ingredient_data)
+
+# Display the most popular items in each category
+st.write("Most popular ingredients for each category:")
+for category, item in most_popular_items.items():
+    st.write(f"- {category.capitalize()}: {item} with {ingredient_data[category][item]} orders")
