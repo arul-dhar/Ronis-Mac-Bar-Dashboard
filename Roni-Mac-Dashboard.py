@@ -55,7 +55,7 @@ def load_data(file_name):
             hours.append(order_time)
 
             # Count ingredients
-            ingredient = row[2].lower()
+            ingredient = row[2]
             for category in ingredient_data:
                 if ingredient in ingredient_data[category]:
                     ingredient_data[category][ingredient] += 1
