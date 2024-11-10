@@ -1,5 +1,4 @@
 import csv
-import matplotlib.pyplot as plt
 import numpy as np
 
 file_names = ['april_2024.csv', 'may_2024.csv', 'june_2024.csv', 'july_2024.csv', 'august_2024.csv', 'september_2024.csv', 'october_2024.csv']
@@ -160,8 +159,6 @@ for i in range(0, len(hours)):
 print(hours)
 
 unique, counts = np.unique(hours, return_counts = True)
-plt.bar(unique, counts)
-plt.show()
 
 print(month_orders)
 
