@@ -90,13 +90,24 @@ else:
     ingredient_data, hours = load_data(month_to_file[selected_month_name])
 
 # Dashboard Title
-# Dashboard Title
 st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
 
-# Get the most popular hour and display it as an actual time (e.g., "15:00" for 3 PM)
+# Function to convert 24-hour format to 12-hour format with AM/PM
+def convert_to_12_hour_format(hour):
+    hour = int(hour)  # Convert to integer to handle the hours correctly
+    if hour == 0:
+        return "12:00 AM"
+    elif hour == 12:
+        return "12:00 PM"
+    elif hour < 12:
+        return f"{hour}:00 AM"
+    else:
+        return f"{hour - 12}:00 PM"
+
+# Get the most popular hour and convert to 12-hour format with AM/PM
 most_popular_hour = pd.Series(hours).value_counts().idxmax()
-most_popular_time = f"{int(most_popular_hour)}:00"  # Convert hour to time format
+most_popular_time = convert_to_12_hour_format(most_popular_hour)  # Convert hour to 12-hour format
 st.write(f"Most Popular Hour: {most_popular_time}")
 
 # Data Insights section (moved here after most popular hour)
