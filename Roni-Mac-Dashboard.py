@@ -31,15 +31,11 @@ st.sidebar.header("Filter Options")
 selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.keys()))
 
 # Sidebar options for ingredient categories
-#selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
-#selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
-#selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
-#selected_sauce = st.sidebar.multiselect("Select Sauce", list(ingredient_counts['sauces'].keys()))
-
-selected_cheese = st.sidebar.button("Select Cheese")
-selected_meat = st.sidebar.button("Select Meat")
-selected_topping = st.sidebar.button("Select Topping")
-selected_sauce = st.sidebar.button("Select Sauce")
+selected_cheese = st.sidebar.button("Show Cheese Popularities")
+selected_meat = st.sidebar.button("Show Meat Popularities")
+selected_topping = st.sidebar.button("Show Topping Popularities")
+selected_sauce = st.sidebar.button("Show Drizzle Popularities")
+selected_all = st.sidebar.button("Show All Ingredient Popularities")
     
 # Convert selected month name back to file name
 selected_month = month_to_file[selected_month_name]
@@ -119,6 +115,21 @@ if selected_topping:
 if selected_sauce:
     st.subheader("Sauce Popularity")
     plot_ingredient_popularity(ingredient_data, 'sauces')
+
+# Display graph for all ingredients
+if selected_all:
+    st.subheader("Cheese Popularity")
+    plot_ingredient_popularity(ingredient_data, 'cheese')
+    
+    st.subheader("Meat Popularity")
+    plot_ingredient_popularity(ingredient_data, 'meat')
+    
+    st.subheader("Topping Popularity")
+    plot_ingredient_popularity(ingredient_data, 'toppings')
+
+    st.subheader("Sauce Popularity")
+    plot_ingredient_popularity(ingredient_data, 'sauces')
+
 
 # Insights section
 st.subheader("Data Insights")
