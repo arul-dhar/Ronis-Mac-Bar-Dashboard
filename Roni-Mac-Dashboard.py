@@ -44,12 +44,14 @@ selected_all = st.sidebar.button("Show All Ingredient Popularities")
 def load_data(file_name):
     ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
     hours = []
+    total_orders = 0  # Initialize total orders
 
     with open(file_name, 'r', encoding='utf-8', errors='ignore') as file:
         reader = csv.reader(file)
         header = next(reader, None)
 
         for row in reader:
+            total_orders += 1  # Increment total orders
             try:
                 order_time = row[1].split()[1].split(":")[0]
                 hours.append(order_time)
@@ -63,15 +65,16 @@ def load_data(file_name):
             except Exception:
                 continue
 
-    return ingredient_data, hours
+    return ingredient_data, hours, total_orders
 
 # Function to load data for all months and aggregate
 def load_all_months_data():
     combined_ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
     combined_hours = []
+    total_orders = 0  # Initialize total orders for all months
 
     for file_name in month_to_file.values():
-        monthly_data, monthly_hours = load_data(file_name)
+        monthly_data, monthly_hours, monthly_orders = load_data(file_name)
         
         # Aggregate ingredient counts
         for category in combined_ingredient_data:
@@ -80,18 +83,22 @@ def load_all_months_data():
 
         # Combine hours data
         combined_hours.extend(monthly_hours)
+        total_orders += monthly_orders  # Add monthly orders to total
 
-    return combined_ingredient_data, combined_hours
+    return combined_ingredient_data, combined_hours, total_orders
 
 # Load data based on the selected month
 if selected_month_name == 'All Months':
-    ingredient_data, hours = load_all_months_data()
+    ingredient_data, hours, total_orders = load_all_months_data()
 else:
-    ingredient_data, hours = load_data(month_to_file[selected_month_name])
+    ingredient_data, hours, total_orders = load_data(month_to_file[selected_month_name])
 
 # Dashboard Title
 st.title("Roni's Mac Bar Dashboard")
 st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
+
+# Display total sales for the selected month
+st.write(f"**Total Sales for {selected_month_name}:** {total_orders} orders")
 
 # Function to convert 24-hour format to 12-hour format with AM/PM
 def convert_to_12_hour_format(hour):
