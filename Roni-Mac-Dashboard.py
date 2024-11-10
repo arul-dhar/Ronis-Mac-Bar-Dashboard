@@ -57,7 +57,7 @@ def load_data(file_name):
     return ingredient_data, hours
 
 # Load data for the selected month
-ingredient_data, hours = load_data(selected_month)
+ingredient_data, hours = load_data(file_names)
 
 # Dashboard Title
 st.title("Pizza Orders Dashboard")
