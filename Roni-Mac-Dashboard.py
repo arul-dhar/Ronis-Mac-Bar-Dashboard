@@ -9,6 +9,9 @@ file_names = [
     'july_2024.csv', 'august_2024.csv', 'september_2024.csv', 'october_2024.csv'
 ]
 
+# Month names to display on drop down
+month_names = ["April", "May", "June", "July", "August", "September", "October"]
+
 # Initialize dictionaries for each ingredient category
 ingredient_counts = {
     'cheese': {'alfredo': 0, 'cheddar': 0, 'pepperjack': 0},
@@ -23,7 +26,7 @@ ingredient_counts = {
 
 # Sidebar for selecting month and ingredient filters
 st.sidebar.header("Filter Options")
-selected_month = st.sidebar.selectbox("Select Month", file_names)
+selected_month = st.sidebar.selectbox("Select Month", month_names)
 selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
 selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
 selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
