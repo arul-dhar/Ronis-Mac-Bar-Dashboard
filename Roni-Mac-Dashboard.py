@@ -14,9 +14,6 @@ month_to_file = {
     'October': 'october_2024.csv'
 }
 
-# Add "All Months" to the dropdown options
-month_names = ['All Months'] + list(month_to_file.keys())
-
 # Initialize dictionaries for each ingredient category
 ingredient_counts = {
     'cheese': {'Alfredo': 0, 'Cheddar': 0, 'Pepper Jack': 0},
@@ -31,7 +28,7 @@ ingredient_counts = {
 
 # Sidebar for selecting month and ingredient filters
 st.sidebar.header("Filter Options")
-selected_month_name = st.sidebar.selectbox("Select Month", month_names)
+selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.keys()))
 
 # Sidebar options for ingredient categories
 selected_cheese = st.sidebar.button("Show Cheese Popularities")
@@ -39,11 +36,15 @@ selected_meat = st.sidebar.button("Show Meat Popularities")
 selected_topping = st.sidebar.button("Show Topping Popularities")
 selected_sauce = st.sidebar.button("Show Drizzle Popularities")
 selected_all = st.sidebar.button("Show All Ingredient Popularities")
+    
+# Convert selected month name back to file name
+selected_month = month_to_file[selected_month_name]
 
-# Function to load data from a single CSV file and count ingredients
+# Function to load data from CSV files and count ingredients
 def load_data(file_name):
-    ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
+    orders = []
     hours = []
+    ingredient_data = ingredient_counts.copy()
 
     with open(file_name, 'r', encoding='utf-8', errors='ignore') as file:
         reader = csv.reader(file)
@@ -60,45 +61,25 @@ def load_data(file_name):
                     if ingredient in ingredient_data[category]:
                         ingredient_data[category][ingredient] += 1
 
-            except Exception:
+            except Exception as e:
+                # Log or print the error if needed, but continue processing
+                print(f"Error processing row: {row} - {e}")
                 continue
-
+    
     return ingredient_data, hours
 
-# Function to load data for all months and aggregate
-def load_all_months_data():
-    combined_ingredient_data = {category: counts.copy() for category, counts in ingredient_counts.items()}
-    combined_hours = []
-
-    for file_name in month_to_file.values():
-        monthly_data, monthly_hours = load_data(file_name)
-        
-        # Aggregate ingredient counts
-        for category in combined_ingredient_data:
-            for ingredient in combined_ingredient_data[category]:
-                combined_ingredient_data[category][ingredient] += monthly_data[category][ingredient]
-
-        # Combine hours data
-        combined_hours.extend(monthly_hours)
-
-    return combined_ingredient_data, combined_hours
-
-# Load data based on the selected month
-if selected_month_name == 'All Months':
-    ingredient_data, hours = load_all_months_data()
-else:
-    ingredient_data, hours = load_data(month_to_file[selected_month_name])
+# Load data for the selected month
+ingredient_data, hours = load_data(selected_month)
 
 # Dashboard Title
-st.title("Roni's Mac Bar Dashboard")
-st.subheader(f"Overview for {'All Months' if selected_month_name == 'All Months' else selected_month_name + ' 2024'}")
+st.title("Pizza Orders Dashboard")
+st.subheader(f"Monthly Overview for {selected_month_name} 2024")
 
 # Monthly Orders by Hour
 st.subheader("Orders by Hour")
 hour_counts = pd.Series(hours).value_counts().sort_index()
 st.bar_chart(hour_counts)
 
-# Function to plot ingredient popularity
 def plot_ingredient_popularity(data, category):
     labels = list(data[category].keys())
     counts = list(data[category].values())
@@ -114,29 +95,52 @@ def plot_ingredient_popularity(data, category):
     df = df.set_index(category).reindex(all_labels).reset_index()
     st.bar_chart(df.set_index(category))
 
-# Display graphs based on user selection
+# Helper function to get the most popular item in each category
+def get_most_popular_items(data):
+    most_popular = {}
+    for category, items in data.items():
+        # Find the item with the highest count in each category
+        most_popular[category] = max(items, key=items.get)
+    return most_popular
+
+# Display graph for selected cheese
 if selected_cheese:
     st.subheader("Cheese Popularity")
     plot_ingredient_popularity(ingredient_data, 'cheese')
+
+# Display graph for selected meat
 if selected_meat:
     st.subheader("Meat Popularity")
     plot_ingredient_popularity(ingredient_data, 'meat')
+
+# Display graph for selected toppings
 if selected_topping:
     st.subheader("Topping Popularity")
     plot_ingredient_popularity(ingredient_data, 'toppings')
+
+# Display graph for selected sauces
 if selected_sauce:
     st.subheader("Sauce Popularity")
     plot_ingredient_popularity(ingredient_data, 'sauces')
+
+# Display graph for all ingredients
 if selected_all:
     st.subheader("Cheese Popularity")
     plot_ingredient_popularity(ingredient_data, 'cheese')
+    
     st.subheader("Meat Popularity")
     plot_ingredient_popularity(ingredient_data, 'meat')
+    
     st.subheader("Topping Popularity")
     plot_ingredient_popularity(ingredient_data, 'toppings')
+
     st.subheader("Sauce Popularity")
     plot_ingredient_popularity(ingredient_data, 'sauces')
 
-# Insights section
+# Data Insights section with most popular items
 st.subheader("Data Insights")
-st.write("Most popular ingredients and combinations can be displayed here.")
+most_popular_items = get_most_popular_items(ingredient_data)
+st.write("Most Popular Items for Each Ingredient Category:")
+for category, item in most_popular_items.items():
+    st.write(f"- {category.capitalize()}: {item} with {ingredient_data[category][item]} orders")
+
