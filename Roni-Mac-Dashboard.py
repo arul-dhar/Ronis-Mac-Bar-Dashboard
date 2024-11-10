@@ -26,7 +26,7 @@ ingredient_counts = {
 
 # Sidebar for selecting month and ingredient filters
 st.sidebar.header("Filter Options")
-selected_month = st.sidebar.selectbox("Select Month", month_names)
+selected_month = st.sidebar.selectbox("Select Month", file_names)
 selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
 selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
 selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
@@ -57,7 +57,7 @@ def load_data(file_name):
     return ingredient_data, hours
 
 # Load data for the selected month
-ingredient_data, hours = load_data(file_names)
+ingredient_data, hours = load_data(selected_month)
 
 # Dashboard Title
 st.title("Pizza Orders Dashboard")
