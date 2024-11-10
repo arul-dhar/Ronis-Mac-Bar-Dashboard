@@ -17,7 +17,7 @@ month_to_file = {
 # Initialize dictionaries for each ingredient category
 ingredient_counts = {
     'cheese': {'Alfredo': 0, 'Cheddar': 0, 'Pepper Jack': 0},
-    'meat': {'No Meat': 0, 'Chicken': 0, 'Pulled Pork': 0, 'Brisket': 0, 'Bacon': 0, 'Ham': 0},
+    'meat': {'No Meat': 0, 'Grilled Chicken': 0, 'Pulled Pork': 0, 'Brisket': 0, 'Bacon': 0, 'Ham': 0},
     'toppings': {
         'No Toppings': 0, 'Broccoli': 0, 'Corn': 0, 'Onions': 0, 
         'Jalapenos': 0, 'Tomatoes': 0, 'Bell Peppers': 0, 'Mushrooms': 0, 
