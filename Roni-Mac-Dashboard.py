@@ -9,8 +9,16 @@ file_names = [
     'july_2024.csv', 'august_2024.csv', 'september_2024.csv', 'october_2024.csv'
 ]
 
-# Month names to display on drop down
-month_names = ["April", "May", "June", "July", "August", "September", "October"]
+# Mapping from month names to file names
+month_to_file = {
+    'April': 'april_2024.csv',
+    'May': 'may_2024.csv',
+    'June': 'june_2024.csv',
+    'July': 'july_2024.csv',
+    'August': 'august_2024.csv',
+    'September': 'september_2024.csv',
+    'October': 'october_2024.csv'
+}
 
 # Initialize dictionaries for each ingredient category
 ingredient_counts = {
@@ -26,11 +34,15 @@ ingredient_counts = {
 
 # Sidebar for selecting month and ingredient filters
 st.sidebar.header("Filter Options")
-selected_month = st.sidebar.selectbox("Select Month", file_names)
-selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
-selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
-selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
-selected_sauce = st.sidebar.multiselect("Select Sauce", list(ingredient_counts['sauces'].keys()))
+selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.keys()))
+
+# Convert selected month name back to file name
+selected_month = month_to_file[selected_month_name]
+
+selected_cheese = st.sidebar.multiselect("Choose Your Cheese", list(ingredient_counts['cheese'].keys()))
+selected_meat = st.sidebar.multiselect("Choose Your Meat", list(ingredient_counts['meat'].keys()))
+selected_topping = st.sidebar.multiselect("Pick Your Toppings", list(ingredient_counts['toppings'].keys()))
+selected_sauce = st.sidebar.multiselect("Choose Your Sauce", list(ingredient_counts['sauces'].keys()))
 
 # Function to load data from CSV files and count ingredients
 def load_data(file_name):
@@ -61,7 +73,7 @@ ingredient_data, hours = load_data(selected_month)
 
 # Dashboard Title
 st.title("Pizza Orders Dashboard")
-st.subheader(f"Monthly Overview for {selected_month.replace('.csv', '').capitalize()}")
+st.subheader(f"Monthly Overview for {selected_month_name} 2024")
 
 # Monthly Orders by Hour
 st.subheader("Orders by Hour")
@@ -73,7 +85,6 @@ def plot_ingredient_popularity(data, category):
     labels, counts = zip(*data[category].items())
     df = pd.DataFrame({category: labels, 'Count': counts})
     st.bar_chart(df.set_index(category))
-
 
 # Display charts for selected ingredients
 if selected_cheese:
@@ -88,4 +99,3 @@ if selected_sauce:
 # Insights section
 st.subheader("Data Insights")
 st.write("Most popular ingredients and combinations can be displayed here.")
-
