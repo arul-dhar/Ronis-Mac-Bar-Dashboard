@@ -55,16 +55,18 @@ def load_data(file_name):
         header = next(reader, None)
 
         for row in reader:
-            if row[5] == "0-0":
-                continue
-            order_time = row[1].split()[1].split(":")[0]
-            hours.append(order_time)
+            try:
+                order_time = row[1].split()[1].split(":")[0]
+                hours.append(order_time)
+    
+                # Count ingredients
+                ingredient = row[2]
+                for category in ingredient_data:
+                    if ingredient in ingredient_data[category]:
+                        ingredient_data[category][ingredient] += 1
 
-            # Count ingredients
-            ingredient = row[2]
-            for category in ingredient_data:
-                if ingredient in ingredient_data[category]:
-                    ingredient_data[category][ingredient] += 1
+            except:
+                continue
     
     return ingredient_data, hours
 
