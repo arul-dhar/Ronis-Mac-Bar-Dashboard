@@ -50,7 +50,7 @@ def load_data(file_name):
     hours = []
     ingredient_data = ingredient_counts.copy()
 
-    with open(file_name, 'r') as file:
+    with open(file_name, 'r', encoding='utf-8', errors='ignore') as file:
         reader = csv.reader(file)
         header = next(reader, None)
 
@@ -65,10 +65,13 @@ def load_data(file_name):
                     if ingredient in ingredient_data[category]:
                         ingredient_data[category][ingredient] += 1
 
-            except:
+            except Exception as e:
+                # Log or print the error if needed, but continue processing
+                print(f"Error processing row: {row} - {e}")
                 continue
     
     return ingredient_data, hours
+
 
 # Load data for the selected month
 ingredient_data, hours = load_data(selected_month)
