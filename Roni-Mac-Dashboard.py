@@ -30,6 +30,12 @@ ingredient_counts = {
 st.sidebar.header("Filter Options")
 selected_month_name = st.sidebar.selectbox("Select Month", list(month_to_file.keys()))
 
+# Sidebar options for ingredient categories
+selected_cheese = st.sidebar.multiselect("Select Cheese", list(ingredient_counts['cheese'].keys()))
+selected_meat = st.sidebar.multiselect("Select Meat", list(ingredient_counts['meat'].keys()))
+selected_topping = st.sidebar.multiselect("Select Topping", list(ingredient_counts['toppings'].keys()))
+selected_sauce = st.sidebar.multiselect("Select Sauce", list(ingredient_counts['sauces'].keys()))
+
 # Convert selected month name back to file name
 selected_month = month_to_file[selected_month_name]
 
@@ -69,18 +75,44 @@ st.subheader("Orders by Hour")
 hour_counts = pd.Series(hours).value_counts().sort_index()
 st.bar_chart(hour_counts)
 
-# Ingredient Popularity Charts
 def plot_ingredient_popularity(data, category):
-    labels, counts = zip(*data[category].items())
+    labels = list(data[category].keys())
+    counts = list(data[category].values())
     df = pd.DataFrame({category: labels, 'Count': counts})
+
+    # Ensure all ingredients are represented, even with zero counts
+    all_labels = list(ingredient_counts[category].keys())
+    for label in all_labels:
+        if label not in df[category].values:
+            df = pd.concat([df, pd.DataFrame({category: [label], 'Count': [0]})], ignore_index=True)
+
+    # Re-sort the DataFrame to maintain the correct order
+    df = df.set_index(category).reindex(all_labels).reset_index()
     st.bar_chart(df.set_index(category))
 
-if st.button("Show All Ingredient Popularity"):
-    # Display charts for all ingredients
-    plot_ingredient_popularity(ingredient_data, 'cheese')
-    plot_ingredient_popularity(ingredient_data, 'meat')
-    plot_ingredient_popularity(ingredient_data, 'toppings')
-    plot_ingredient_popularity(ingredient_data, 'sauces')
+# Display graph for selected cheese
+if st.button("Show Cheese Popularity"):
+    if selected_cheese:
+        st.subheader("Cheese Popularity")
+        plot_ingredient_popularity(ingredient_data, 'cheese')
+
+# Display graph for selected meat
+if st.button("Show Meat Popularity"):
+    if selected_meat:
+        st.subheader("Meat Popularity")
+        plot_ingredient_popularity(ingredient_data, 'meat')
+
+# Display graph for selected toppings
+if st.button("Show Topping Popularity"):
+    if selected_topping:
+        st.subheader("Topping Popularity")
+        plot_ingredient_popularity(ingredient_data, 'toppings')
+
+# Display graph for selected sauces
+if st.button("Show Sauce Popularity"):
+    if selected_sauce:
+        st.subheader("Sauce Popularity")
+        plot_ingredient_popularity(ingredient_data, 'sauces')
 
 # Insights section
 st.subheader("Data Insights")
